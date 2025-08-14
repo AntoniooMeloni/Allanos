@@ -1,0 +1,21 @@
+
+#### `RaspberryPi/config/devices.json`
+Configuração dos pinos e dispositivos no Pi.
+
+```json
+{
+  "devices": [
+    {
+      "id": "luz_sala",
+      "name": "Luz da Sala",
+      "type": "relay",
+      "pin": 17
+    },
+    {
+      "id": "luz_quarto",
+      "name": "Luz do Quarto",
+      "type": "relay",
+      "pin": 27
+      }
+  ]
+}
