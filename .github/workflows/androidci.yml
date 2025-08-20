@@ -27,3 +27,6 @@ jobs:
       - name: Dar permissão ao Gradle Wrapper
         run: chmod +x AndroidApp/gradlew
         working-directory: AndroidApp
+
+      - name: Give execute permission for gradlew
+        run: chmod +x ./gradlew
