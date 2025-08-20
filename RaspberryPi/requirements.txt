@@ -1,2 +1,8 @@
-RPi.GPIO
-pybluez-py3
+# Comunicação Bluetooth
+pybluez==0.46
+
+# Controle de GPIO (automação Raspberry Pi)
+gpiozero==1.6.2
+
+# Testes (opcional, recomendado)
+pytest==8.2.0
