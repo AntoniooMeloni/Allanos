@@ -31,24 +31,30 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Make gradlew executable
-        run: chmod +x ./gradlew
+        run: chmod +x ./AndroidApp/gradlew
 
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v2
+        with:
+          gradle-wrapper-dir: AndroidApp
 
       - name: Check Gradle wrapper files
         run: |
-          echo "Verificando arquivos do projeto:"
+          echo "Verificando estrutura do projeto:"
           ls -la
+          echo "Verificando pasta AndroidApp:"
+          ls -la AndroidApp/
           echo "Verificando pasta gradle:"
-          ls -la gradle/wrapper/ || echo "Pasta gradle/wrapper não encontrada"
+          ls -la AndroidApp/gradle/wrapper/ || echo "Pasta gradle/wrapper não encontrada"
           echo "Verificando se gradlew existe:"
-          file ./gradlew || echo "gradlew não encontrado"
+          file ./AndroidApp/gradlew || echo "gradlew não encontrado"
 
       - name: Build with Gradle
+        working-directory: ./AndroidApp
         run: ./gradlew build --stacktrace --info
 
       - name: Run tests
+        working-directory: ./AndroidApp
         run: ./gradlew test --stacktrace
 
       - name: Upload build artifacts
@@ -57,6 +63,6 @@ jobs:
         with:
           name: build-artifacts
           path: |
-            app/build/outputs/
-            build/reports/
+            AndroidApp/app/build/outputs/
+            AndroidApp/build/reports/
           retention-days: 7
