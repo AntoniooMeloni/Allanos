@@ -1,7 +1,7 @@
 # Allanos 
 
 ![Logo SENAI](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRArHRQlKS6To2_41tWeGjSX8gB-A3QEX8Xwg&s)
-![Logo Android](https://img.icons8.com/?size=100&id=GgyRdUL5k1fr&format=png&color=000000)
+![Logo Android](https://www.flaticon.com/free-icon/android_226770?term=android&page=1&position=1&origin=tag&related_id=226770)
 
 **Autor:** Antônio A. Meloni
 
@@ -38,6 +38,7 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 ---
 
 ## Executar
+
 
 
 
