@@ -1,4 +1,4 @@
-# Allanos - Sistema de Automação
+# Allanos 
 
 ![Logo SENAI](https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/SENAI_logo.svg/256px-SENAI_logo.svg.png)
 ![Logo Android](https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Android_robot.svg/120px-Android_robot.svg.png)
@@ -24,9 +24,8 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 
 - Kotlin / Java
 - Gradle
-- Bibliotecas para automação e integração com hardware
-- Raspberry Pi (opcional)
-
+- Bibliotecas Python para automação e integração com hardware
+- Raspberry Pi 
 ---
 
 ## Requisitos
@@ -34,12 +33,10 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 - Java 17 ou superior
 - Gradle
 - Sistema operacional Linux ou Windows
-- Raspberry Pi (opcional)
+- Raspberry Pi 
 
 ---
 
-## Instalação
+## Executar
 
-1. Clone o repositório:
-   ```bash
-   git clone https://github.com/AntoniooMeloni/Allanos.git
+
