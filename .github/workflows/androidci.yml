@@ -23,3 +23,7 @@ jobs:
       - name: Build com Gradle
         run: ./gradlew build
         working-directory: AndroidApp
+
+      - name: Dar permissão ao Gradle Wrapper
+        run: chmod +x AndroidApp/gradlew
+        working-directory: AndroidApp

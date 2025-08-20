@@ -31,3 +31,8 @@ jobs:
           else
             echo "Nenhum teste encontrado, pulando etapa."
           fi
+
+          - name: Instalar dependências
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r RaspberryPi/requirements.txt

@@ -1,5 +1,6 @@
 # Comunicação Bluetooth
-pybluez==0.46
+pybluez==0.23
+
 
 # Controle de GPIO (automação Raspberry Pi)
 gpiozero==1.6.2
