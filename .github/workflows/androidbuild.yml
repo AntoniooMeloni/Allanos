@@ -1,31 +1,17 @@
-name: Android CI
-
-on:
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        distribution: 'temurin'
-        java-version: '17'
+      - name: Instalar JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
 
-    - name: Validate Gradle Wrapper
-      uses: gradle/wrapper-validation-action@v1
+      - name: Instalar Gradle
+        uses: gradle/gradle-build-action@v2
 
-    - name: Make gradlew executable
-      run: chmod +x ./gradlew
-
-    - name: Build with Gradle 8.0
-      run: ./gradlew build --stacktrace
+      - name: Build
+        run: gradle build
