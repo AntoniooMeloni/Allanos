@@ -21,7 +21,7 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 - Controle automatizado de dispositivos
 - Interface simples e intuitiva
 - Código modular para fácil extensão
-- Compatível com Raspberry Pi e sistemas Linux/Windows
+- Compatível com Raspberry Pi e sistemas Android
 
 ---
 
@@ -43,6 +43,7 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 ---
 
 ## Executar
+
 
 
 
