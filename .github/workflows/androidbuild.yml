@@ -20,14 +20,35 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
+      # Garantir que o gradlew tenha permissões corretas antes de usar o Gradle setup
+      - name: Make gradlew executable
+        run: chmod +x AndroidApp/gradlew
+
       # Setup Gradle usando a action oficial recomendada
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-home-cache-cleanup: true
 
-      - name: Make gradlew executable
-        run: chmod +x AndroidApp/gradlew
+      # Verificar compatibilidade do shell e ambiente
+      - name: Environment check
+        working-directory: AndroidApp
+        run: |
+          echo "📋 ENVIRONMENT VERIFICATION"
+          echo "Shell: $0"
+          echo "User: $(whoami)"
+          echo "Working directory: $(pwd)"
+          echo "Java version: $(java -version 2>&1 | head -1)"
+          echo "Gradle wrapper permissions: $(ls -la gradlew)"
+          
+          # Verificar se o gradlew pode ser executado
+          if [ -x "./gradlew" ]; then
+            echo "✅ gradlew is executable"
+          else
+            echo "❌ gradlew is not executable"
+            chmod +x ./gradlew
+            echo "✅ Fixed gradlew permissions"
+          fi
 
       # Diagnóstico completo do projeto
       - name: Project diagnosis
@@ -36,90 +57,134 @@ jobs:
           echo "📋 PROJECT STRUCTURE"
           ls -la
           
-          echo "📋 GRADLE WRAPPER"
-          ls -la gradle/wrapper/ || echo "⚠️  gradle/wrapper not found"
+          echo "📋 GRADLE WRAPPER FILES"
+          if [ -d "gradle/wrapper" ]; then
+            ls -la gradle/wrapper/
+            echo "Gradle wrapper properties:"
+            cat gradle/wrapper/gradle-wrapper.properties || echo "❌ gradle-wrapper.properties not found"
+          else
+            echo "❌ gradle/wrapper directory not found"
+          fi
           
+          # Usar bash explicitamente para executar o gradlew se necessário
           echo "📋 GRADLE VERSION"
-          ./gradlew --version
+          bash ./gradlew --version || ./gradlew --version
           
           echo "📋 AVAILABLE TASKS"
-          ./gradlew tasks --all | head -50
+          bash ./gradlew tasks --console=plain 2>/dev/null | head -30 || echo "⚠️ Could not list tasks"
 
       # Clean build para evitar problemas de cache
       - name: Clean project
         working-directory: AndroidApp
-        run: ./gradlew clean
+        run: |
+          echo "🧹 CLEANING PROJECT"
+          bash ./gradlew clean --console=plain --no-daemon || {
+            echo "⚠️ Clean failed with bash, trying direct execution"
+            ./gradlew clean --console=plain --no-daemon
+          }
 
       # Verificar se existem arquivos de configuração essenciais
       - name: Verify essential files
         working-directory: AndroidApp
         run: |
           echo "📋 CHECKING ESSENTIAL FILES"
+          
+          # Build files
           [ -f "build.gradle" ] && echo "✅ build.gradle found" || echo "❌ build.gradle missing"
           [ -f "build.gradle.kts" ] && echo "✅ build.gradle.kts found" || echo "❌ build.gradle.kts missing"
-          [ -f "settings.gradle" ] && echo "✅ settings.gradle found" || echo "❌ settings.gradle missing"
+          [ -f "settings.gradle" ] && echo "✅ settings.gradle found" || echo "❌ settings.gradle missing"  
           [ -f "settings.gradle.kts" ] && echo "✅ settings.gradle.kts found" || echo "❌ settings.gradle.kts missing"
-          [ -f "local.properties" ] && echo "⚠️  local.properties found (should be in .gitignore)" || echo "✅ local.properties not found"
           
-          echo "📋 APP MODULE"
+          # Local properties (should not exist in repo)
+          [ -f "local.properties" ] && echo "⚠️ local.properties found (should be in .gitignore)" || echo "✅ local.properties not in repo"
+          
+          # App module
           [ -d "app" ] && echo "✅ app directory found" || echo "❌ app directory missing"
           [ -f "app/build.gradle" ] && echo "✅ app/build.gradle found" || echo "❌ app/build.gradle missing"
           [ -f "app/build.gradle.kts" ] && echo "✅ app/build.gradle.kts found" || echo "❌ app/build.gradle.kts missing"
+          
+          # Manifest file
+          [ -f "app/src/main/AndroidManifest.xml" ] && echo "✅ AndroidManifest.xml found" || echo "❌ AndroidManifest.xml missing"
 
-      # Build do projeto - tentando diferentes estratégias
-      - name: Build project (Strategy 1 - assembleDebug)
+      # Build do projeto com diferentes estratégias e melhor tratamento de erros
+      - name: Build project (assembleDebug)
         id: build_debug
         working-directory: AndroidApp
         continue-on-error: true
         run: |
           echo "🔨 BUILDING WITH assembleDebug"
-          ./gradlew assembleDebug --stacktrace --info --no-daemon
+          set -e
+          
+          # Tentar com bash primeiro, depois execução direta
+          bash ./gradlew assembleDebug --console=plain --no-daemon --stacktrace || {
+            echo "⚠️ Build failed with bash, trying direct execution"
+            ./gradlew assembleDebug --console=plain --no-daemon --stacktrace
+          }
 
-      - name: Build project (Strategy 2 - build)
+      - name: Build project (alternative - build task)
         if: steps.build_debug.outcome == 'failure'
         id: build_full
         working-directory: AndroidApp
         continue-on-error: true
         run: |
-          echo "🔨 BUILDING WITH build command"
-          ./gradlew build --stacktrace --info --no-daemon --exclude-task test
+          echo "🔨 BUILDING WITH build task (excluding tests)"
+          bash ./gradlew build -x test -x lint --console=plain --no-daemon --stacktrace || {
+            echo "⚠️ Build failed with bash, trying direct execution"
+            ./gradlew build -x test -x lint --console=plain --no-daemon --stacktrace
+          }
 
-      - name: Build project (Strategy 3 - minimal)
+      - name: Build project (minimal compile)
         if: steps.build_debug.outcome == 'failure' && steps.build_full.outcome == 'failure'
         working-directory: AndroidApp
         run: |
-          echo "🔨 BUILDING WITH minimal setup"
-          ./gradlew compileDebugSources --stacktrace --info --no-daemon
+          echo "🔨 MINIMAL BUILD - compile sources only"
+          bash ./gradlew compileDebugSources --console=plain --no-daemon --stacktrace || {
+            echo "⚠️ Compile failed with bash, trying direct execution"
+            ./gradlew compileDebugSources --console=plain --no-daemon --stacktrace
+          }
 
-      # Tentar executar testes apenas se existirem
-      - name: Check for tests
-        working-directory: AndroidApp
-        run: |
-          echo "📋 CHECKING FOR TESTS"
-          if [ -d "app/src/test" ]; then
-            echo "✅ Unit test directory found"
-            ls -la app/src/test/ || true
-          else
-            echo "⚠️  No unit test directory found"
-          fi
-          
-          if [ -d "app/src/androidTest" ]; then
-            echo "✅ Android test directory found"
-            ls -la app/src/androidTest/ || true
-          else
-            echo "⚠️  No android test directory found"
-          fi
-
-      - name: Run unit tests (if available)
+      # Verificar e executar testes
+      - name: Check and run tests
         working-directory: AndroidApp
         continue-on-error: true
         run: |
-          echo "🧪 RUNNING UNIT TESTS"
-          # Tentar diferentes variações de teste
-          ./gradlew testDebugUnitTest --stacktrace || \
-          ./gradlew test --stacktrace || \
-          ./gradlew check --stacktrace || \
-          echo "⚠️  No tests configured or available"
+          echo "📋 TESTING STRATEGY"
+          
+          # Verificar se existem testes
+          HAS_UNIT_TESTS=false
+          HAS_ANDROID_TESTS=false
+          
+          if [ -d "app/src/test" ] && [ "$(find app/src/test -name '*.java' -o -name '*.kt' | wc -l)" -gt 0 ]; then
+            echo "✅ Unit tests found"
+            HAS_UNIT_TESTS=true
+          fi
+          
+          if [ -d "app/src/androidTest" ] && [ "$(find app/src/androidTest -name '*.java' -o -name '*.kt' | wc -l)" -gt 0 ]; then
+            echo "✅ Android tests found"
+            HAS_ANDROID_TESTS=true
+          fi
+          
+          # Executar testes unitários se existirem
+          if [ "$HAS_UNIT_TESTS" = true ]; then
+            echo "🧪 Running unit tests"
+            bash ./gradlew testDebugUnitTest --console=plain --continue || {
+              echo "⚠️ Unit tests failed with bash, trying direct execution"
+              ./gradlew testDebugUnitTest --console=plain --continue || echo "⚠️ Unit tests failed"
+            }
+          else
+            echo "⚠️ No unit tests to run"
+          fi
+
+      # Lint check (se disponível)
+      - name: Run lint (if configured)
+        working-directory: AndroidApp
+        continue-on-error: true
+        run: |
+          echo "🔍 RUNNING LINT"
+          bash ./gradlew lintDebug --console=plain --continue || {
+            echo "⚠️ Lint failed with bash, trying direct execution"
+            ./gradlew lintDebug --console=plain --continue || echo "⚠️ Lint not available or failed"
+          }
 
       # Upload dos artefatos gerados
       - name: Upload build outputs
@@ -143,17 +208,44 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
+      # Upload dos relatórios de teste e lint
+      - name: Upload test and lint reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reports
+          path: |
+            AndroidApp/app/build/reports/tests/
+            AndroidApp/app/build/reports/lint-results*
+          retention-days: 5
+          if-no-files-found: ignore
+
       # Informações finais do build
       - name: Build summary
         if: always()
         working-directory: AndroidApp
         run: |
           echo "📋 BUILD SUMMARY"
+          echo "================================"
+          
           echo "Gradle Daemon Status:"
-          ./gradlew --status || true
+          bash ./gradlew --status || ./gradlew --status || echo "Could not check daemon status"
           
-          echo "Build outputs:"
-          find . -name "*.apk" -type f 2>/dev/null || echo "No APK files found"
+          echo ""
+          echo "Generated APK files:"
+          find . -name "*.apk" -type f -exec ls -la {} \; 2>/dev/null || echo "❌ No APK files found"
           
-          echo "Report files:"
-          find . -name "*.html" -path "*/reports/*" -type f 2>/dev/null || echo "No report files found"
+          echo ""
+          echo "Generated AAB files:"
+          find . -name "*.aab" -type f -exec ls -la {} \; 2>/dev/null || echo "❌ No AAB files found"
+          
+          echo ""
+          echo "Test reports:"
+          find . -name "*.html" -path "*/reports/tests/*" -type f 2>/dev/null || echo "❌ No test reports found"
+          
+          echo ""
+          echo "Lint reports:"
+          find . -name "lint-results*" -type f 2>/dev/null || echo "❌ No lint reports found"
+          
+          echo "================================"
+          echo "✅ Build workflow completed"
