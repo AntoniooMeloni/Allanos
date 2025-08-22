@@ -3,7 +3,7 @@
 ![Logo SENAI](https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png)
 
 ---
-##Ferrametas Utilizadas
+## Ferrametas Utilizadas
 ![Logo Android](https://img.icons8.com/?size=100&id=Qn4GH3u6CYo5&format=png&color=000000)
 ![Logo Raspberry Pi](https://img.icons8.com/?size=100&id=s8AQ7pC6ux27&format=png&color=000000)
 ![Logo Java](https://img.icons8.com/?size=100&id=mQ01rhdaQzyT&format=png&color=000000)
@@ -47,6 +47,7 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 ---
 
 ## Executar
+
 
 
 
