@@ -71,7 +71,7 @@ except ImportError as e:
             "
           fi
 
-      - name: Upload logs se houver erro
+     - name: Upload logs se houver erro
         uses: actions/upload-artifact@v4
         if: failure()
         with:
