@@ -37,12 +37,13 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 
 - Java 17 ou superior
 - Gradle
-- Sistema operacional Linux ou Windows
+- Sistema operacional Android
 - Raspberry Pi 
 
 ---
 
 ## Executar
+
 
 
 
