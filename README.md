@@ -9,6 +9,7 @@
 ![Logo Java](https://img.icons8.com/?size=100&id=mQ01rhdaQzyT&format=png&color=000000)
 ![Logo Kotlin](https://img.icons8.com/?size=100&id=ZoxjA0jZDdFZ&format=png&color=000000)
 ![Logo Python](https://img.icons8.com/?size=100&id=13441&format=png&color=000000)
+![Logo Gradle](https://avatars.githubusercontent.com/u/124156?s=200&v=4)
 
 ---
 
@@ -47,6 +48,7 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 ---
 
 ## Executar
+
 
 
 
