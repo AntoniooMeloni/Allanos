@@ -1,6 +1,7 @@
 import json
 from device_controllers.relay_controller import RelayController, GPIO
-from bt_server import BluetoothServer # Importa a nova classe
+from bluetooth_service.bt_server import BluetoothServer
+
 
 # Mapeia o 'type' do JSON para a classe Python correspondente
 CONTROLLER_MAP = {
