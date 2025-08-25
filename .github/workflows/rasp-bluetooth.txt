@@ -1,0 +1,54 @@
+name: Raspberry Pi Bluetooth CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+    paths:
+      - 'RaspberryPi/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'RaspberryPi/**'
+
+jobs:
+  test-bluetooth:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Python 3.9
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Instalar dependências do sistema para PyBluez
+        run: sudo apt-get update && sudo apt-get install -y libbluetooth-dev
+
+      - name: Instalar dependências Python
+        working-directory: ./RaspberryPi
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f "requirements.txt" ]; then
+            pip install -r requirements.txt
+          else
+            echo "Arquivo requirements.txt não encontrado."
+            exit 1
+          fi
+      
+      - name: Verificar sintaxe do servidor Bluetooth
+        run: python -m py_compile RaspberryPi/src/bt_server.py
+
+      - name: Teste de importação da biblioteca
+        run: |
+          python -c "
+try:
+    import bluetooth
+    print('✓ Biblioteca PyBluez importada com sucesso.')
+except ImportError as e:
+    print('✗ Falha ao importar a biblioteca PyBluez:', e)
+    exit(1)
+except Exception as e:
+    print('AVISO: Ocorreu um erro, mas pode ser normal em ambiente de CI sem hardware Bluetooth:', e)
+          "

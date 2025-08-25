@@ -1,6 +1,6 @@
 import json
-import time
 from device_controllers.relay_controller import RelayController, GPIO
+from bt_server import BluetoothServer # Importa a nova classe
 
 # Mapeia o 'type' do JSON para a classe Python correspondente
 CONTROLLER_MAP = {
@@ -59,33 +59,18 @@ class DeviceManager:
         GPIO.cleanup()
 
 def main():
-    """Função principal para simular o servidor."""
-    config_file = 'config/devices.json'
+    """Função principal para iniciar o servidor."""
+    config_file = '../config/devices.json' # Ajuste o caminho para ser relativo ao main.py
     manager = DeviceManager(config_file)
+    bt_server = BluetoothServer(device_manager=manager)
     
-    print("\n--- Servidor All-anos iniciado (Modo Simulado) ---")
-    print("Aguardando comandos...")
-
     try:
-        # Bloco de simulação (substituir pelo seu servidor bluetooth)
-        while True:
-            # Simula recebimento de um comando a cada 10 segundos
-            time.sleep(10)
-            print("\n--- Simulação: Recebendo comando 'get_devices' ---")
-            cmd = '{ "command": "get_devices" }'
-            response = manager.handle_command(cmd)
-            print(f"Resposta: {response}")
-
-            time.sleep(5)
-            print("\n--- Simulação: Recebendo comando 'set_state' para 'luz_sala' ---")
-            cmd = '{ "command": "set_state", "device_id": "luz_sala", "state": "ON" }'
-            response = manager.handle_command(cmd)
-            print(f"Resposta: {response}")
-
-    except KeyboardInterrupt:
-        print("\nServidor encerrado.")
+        bt_server.start()
+    except Exception as e:
+        print(f"Ocorreu um erro inesperado: {e}")
     finally:
         manager.cleanup()
+        bt_server.stop()
 
 if __name__ == "__main__":
     main()
