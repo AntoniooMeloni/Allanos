@@ -1,3 +1,33 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+# Arquivos de sistema e de cache da Python
+# Ignora diretórios de cache e arquivos compilados
+__pycache__/
+*.pyc
+*.pyo
+
+# Logs e dados de tempo de execução
+# Não é necessário rastrear logs de execução ou arquivos de dados temporários.
+*.log
+*.tmp
+*.db
+
+# Arquivos específicos do sistema operacional
+# Ignora arquivos de metadados do macOS e do Windows
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Arquivos e diretórios de build
+# Ignora diretórios de empacotamento e distribuição, como os criados pelo `setuptools`
+dist/
+build/
+*.egg-info/
+
+# Arquivos do VS Code
+# Ignora configurações do editor que são específicas do usuário
+.vscode/
+
+# Jupyter Notebook (se aplicável)
+.ipynb_checkpoints/
