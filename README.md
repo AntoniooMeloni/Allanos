@@ -45,9 +45,7 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 - Sistema operacional Android
 - Raspberry Pi 
 
----
 
-## Executar
 
 
 
