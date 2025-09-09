@@ -48,7 +48,8 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 
 ## Executar
 
-Conecte um celular ao computador e abra a pasta no Android Studio
+Conecte um dispositivo Android ao computador e abra a pasta no Android Studio
+
 
 
 
