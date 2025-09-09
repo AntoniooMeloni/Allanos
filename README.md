@@ -44,6 +44,11 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 - Gradle
 - Sistema operacional Android
 - Raspberry Pi 
+---
+
+## Executar
+
+Conecte um celular ao computador e abra a pasta no Android Studio
 
 
 
