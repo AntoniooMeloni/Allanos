@@ -1,7 +1,4 @@
 # Allanos 
-
-![Logo SENAI](https://upload.wikimedia.org/wikipedia/commons/8/8c/SENAI_S%C3%A3o_Paulo_logo.png)
-
 ---
 ## Ferrametas Utilizadas
 ![Logo Android](https://img.icons8.com/?size=100&id=Qn4GH3u6CYo5&format=png&color=000000)
@@ -20,7 +17,7 @@
 ## Descrição
 
 **Allanos** é um sistema de automação desenvolvido em **Kotlin/Java**, projetado para rodar em **Raspberry Pi** e outros dispositivos.  
-Ele permite controlar dispositivos de forma inteligente, sendo ideal para projetos de automação residencial, escolar ou experimental.
+Ele permite controlar dispositivos de forma inteligente, sendo ideal para projetos de automação residencial, industrial ou experimental.
 
 **Principais recursos:**
 - Controle automatizado de dispositivos
@@ -49,6 +46,7 @@ Ele permite controlar dispositivos de forma inteligente, sendo ideal para projet
 ## Executar
 
 Conecte um dispositivo Android ao computador e abra a pasta no Android Studio
+
 
 
 
